@@ -1,10 +1,14 @@
 package edu.carleton.COMP4601.a1.service;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
@@ -72,6 +76,34 @@ public class DocumentServiceImpl implements IDocumentService {
 		if(findOne == null)
 			return null;
 		return new Document(findOne.toMap());
+	}
+
+	@Override
+	public int deleteDocumentsWithTags(List<String> tags) {
+		String tag = tags.get(0);
+		
+		DBObject o = new BasicDBObject("$eq", tag);
+		
+		DBObject fields = new BasicDBObject();
+		fields.put("$elemMatch", o);
+		
+		DBObject query = new BasicDBObject(Document.COLUMN_TAGS, fields);
+		DBCursor find = getDocumentsCollection().find(query);
+		
+		List<Document> docs = new ArrayList<Document>();
+		while(find.hasNext()) {
+			DBObject next = find.next();
+			docs.add(new Document(next.toMap()));
+			System.out.println(new Document(next.toMap()).getId());
+		}
+		
+		
+		return 0;
+	}
+	
+	public static void main(String[] args) {
+		DocumentServiceImpl documentServiceImpl = new DocumentServiceImpl();
+		documentServiceImpl.deleteDocumentsWithTags(Arrays.asList("foo"));
 	}
 
 }

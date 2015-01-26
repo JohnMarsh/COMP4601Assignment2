@@ -1,5 +1,7 @@
 package edu.carleton.COMP4601.a1.service;
 
+import java.util.List;
+
 import edu.carleton.COMP4601.a1.dao.Document;
 
 /**
@@ -30,4 +32,11 @@ public interface IDocumentService {
 	 * @throws Exception
 	 */
 	public Document getDocumentById(int id) throws Exception;
+	
+	/**
+	 * Deletes any documents who have any of the given tags
+	 * @param tags
+	 * @return number of documents deleted
+	 */
+	public int deleteDocumentsWithTags(List<String> tags);
 }
