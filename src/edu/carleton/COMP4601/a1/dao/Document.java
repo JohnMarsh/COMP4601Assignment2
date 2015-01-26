@@ -23,7 +23,7 @@ public class Document {
 		this();
 		this.id = id;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public Document(Map<?, ?> map) {
 		this();
