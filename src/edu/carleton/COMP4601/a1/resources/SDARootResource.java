@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -26,6 +27,12 @@ import edu.carleton.COMP4601.a1.service.IDocumentService;
 public class SDARootResource extends AbstractSDAResource {
 	
 	
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String index(@Context HttpServletResponse servletResponse) throws IOException {
+		return "COMP4601 Searchable Document Archive";
+	}
+	
 	/**
 	 * End point for saving a new document
 	 * @param multivaluedMap
@@ -42,6 +49,7 @@ public class SDARootResource extends AbstractSDAResource {
 		try {
 			getService().saveDocument(doc);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(204).build();
 		}
 

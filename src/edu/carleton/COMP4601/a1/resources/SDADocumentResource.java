@@ -1,8 +1,11 @@
 package edu.carleton.COMP4601.a1.resources;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,7 +20,7 @@ import edu.carleton.COMP4601.a1.dao.Document;
 
 
 /**
- * Handles interactions with the REST api for a specific document
+ * Handles interactions with the REST API for a specific document
  * @author devinlynch
  *
  */
@@ -27,6 +30,66 @@ public class SDADocumentResource extends AbstractSDAResource {
 	String id;
 	
 	/**
+	 * Returns an XML representation of a Document
+	 * @param servletResponse
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Document getDocument(@Context HttpServletResponse servletResponse) throws IOException {
+		try {
+			return getService().getDocumentById(Integer.parseInt(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			servletResponse.sendError(204);
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns an XML representation of a Document
+	 * @param servletResponse
+	 * @return
+	 * @throws IOException
+	 */
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String getDocumentHtml(@Context HttpServletResponse servletResponse) throws IOException {
+		try {
+			Document document = getService().getDocumentById(Integer.parseInt(id));
+			return "<html>"
+					+"<body>"
+					+"<b>ID:</b> "+document.getId()+"<br>"
+					+"<b>Text:</b> "+document.getText()+"<br>"
+					+"<b>Name:</b> "+document.getName()+"<br>"
+					+"<b>Links:</b> "+document.getLinks()+"<br>"
+					+"<b>Tags:</b> "+document.getTags()+"<br>"
+					+"<body>"
+					+"</html>";
+		} catch (Exception e) {
+			e.printStackTrace();
+			servletResponse.sendError(204);
+			return null;
+		}
+	}
+	
+	/**
+	 * End point for updating an existing document
+	 * @param multivaluedMap
+	 * @param servletResponse
+	 * @return
+	 * @throws IOException
+	 */
+	@PUT
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response saveNewDocumentPut(MultivaluedMap<String,String> multivaluedMap,
+			@Context HttpServletResponse servletResponse) {
+		return saveNewDocument(multivaluedMap);
+	}
+
+	/**
 	 * End point for updating an existing document
 	 * @param multivaluedMap
 	 * @param servletResponse
@@ -34,22 +97,28 @@ public class SDADocumentResource extends AbstractSDAResource {
 	 * @throws IOException
 	 */
 	@POST
-	@PUT
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response saveNewDocument(MultivaluedMap<String,String> multivaluedMap,
+	public Response saveNewDocumentPost(MultivaluedMap<String,String> multivaluedMap,
 			@Context HttpServletResponse servletResponse) {
+		return saveNewDocument(multivaluedMap);
+	}
+	
+	private Response saveNewDocument(
+			MultivaluedMap<String, String> multivaluedMap) {
 		Document doc = new Document(multivaluedMap);
 		doc.setId(Integer.parseInt(id));
 		
 		try {
 			getService().saveDocument(doc);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(204).build();
 		}
 
 		return Response.status(200).build();
 	}
+	
 	
 	/**
 	 * End point for deleting an existing document
