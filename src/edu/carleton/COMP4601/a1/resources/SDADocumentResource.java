@@ -60,11 +60,7 @@ public class SDADocumentResource extends AbstractSDAResource {
 			Document document = getService().getDocumentById(Integer.parseInt(id));
 			return "<html>"
 					+"<body>"
-					+"<b>ID:</b> "+document.getId()+"<br>"
-					+"<b>Text:</b> "+document.getText()+"<br>"
-					+"<b>Name:</b> "+document.getName()+"<br>"
-					+"<b>Links:</b> "+document.getLinks()+"<br>"
-					+"<b>Tags:</b> "+document.getTags()+"<br>"
+					+getHtmlForSingleDocument(document)
 					+"<body>"
 					+"</html>";
 		} catch (Exception e) {

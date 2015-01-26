@@ -2,7 +2,6 @@ package edu.carleton.COMP4601.a1.service;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.mongodb.BasicDBObject;
@@ -13,6 +12,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.a1.dao.Document;
+import edu.carleton.COMP4601.a1.dao.DocumentCollection;
 import edu.carleton.COMP4601.a1.exceptions.NoIdException;
 
 /**
@@ -76,10 +76,19 @@ public class DocumentServiceImpl implements IDocumentService {
 	}
 
 	@Override
-	public int deleteDocumentsWithTags(List<String> tags) {
-		String tag = tags.get(0);
+	public int deleteDocumentsWithTags(List<String> tags) throws Exception {
+		List<Document> documentsWithTags = getDocumentsWithTags(tags).getDocuments();
 		
-		DBObject o = new BasicDBObject("$eq", tag);
+		for(Document d : documentsWithTags) {
+			deleteDocument(d.getId());
+		}
+		
+		return documentsWithTags.size();
+	}
+
+	@Override
+	public DocumentCollection getDocumentsWithTags(List<String> tags) throws Exception {
+		DBObject o = new BasicDBObject("$in", tags);
 		
 		DBObject fields = new BasicDBObject();
 		fields.put("$elemMatch", o);
@@ -91,16 +100,24 @@ public class DocumentServiceImpl implements IDocumentService {
 		while(find.hasNext()) {
 			DBObject next = find.next();
 			docs.add(new Document(next.toMap()));
-			System.out.println(new Document(next.toMap()).getId());
 		}
 		
-		
-		return 0;
-	}
-	
-	public static void main(String[] args) {
-		DocumentServiceImpl documentServiceImpl = new DocumentServiceImpl();
-		documentServiceImpl.deleteDocumentsWithTags(Arrays.asList("foo"));
+		DocumentCollection coll = new DocumentCollection();
+		coll.setDocuments(docs);
+		return coll;
 	}
 
+	@Override
+	public List<String> getNamesOfAllDocuments() throws Exception {
+		List<String> l = new ArrayList<String>();
+		
+		DBCursor find = getDocumentsCollection().find();
+		while(find.hasNext()) {
+			Document d = new Document(find.next().toMap());
+			l.add(d.getName());
+		}
+		
+		return l;
+	}
+	
 }

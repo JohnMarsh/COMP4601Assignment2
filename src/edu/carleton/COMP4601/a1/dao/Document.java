@@ -56,12 +56,12 @@ public class Document {
 	@SuppressWarnings("unchecked")
 	public Document(Map<?, ?> map) {
 		this();
-		this.id = (Integer) map.get("id");
-		this.score = (Integer) map.get("score");
-		this.name = (String) map.get("name");
-		this.text = (String) map.get("text");
-		this.tags = (ArrayList<String>) map.get("tags");
-		this.links = (ArrayList<String>) map.get("links");
+		this.id = (Integer) map.get(COLUMN_ID);
+		this.score = (Integer) map.get(COLUMN_SCORE);
+		this.name = (String) map.get(COLUMN_NAME);
+		this.text = (String) map.get(COLUMN_TEXT);
+		this.tags = (ArrayList<String>) map.get(COLUMN_TAGS);
+		this.links = (ArrayList<String>) map.get(COLUMN_LINKS);
 	}
 	
 	public Integer getId() {
