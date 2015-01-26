@@ -10,8 +10,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("/sda/delete")
-public class SDASearchResource extends AbstractSDAResource {
+public class SDADeleteResource extends AbstractSDAResource {
 	
+	/**
+	 * Given tags in the format "tag1:tag2:tag3...", any documents found with any of the
+	 * given tags will be deleted.
+	 * @param tags
+	 * @param servletResponse
+	 * @return
+	 */
 	@GET
 	@Path("{tags}")
 	public Response deleteByTags(@QueryParam("tags") String tags,

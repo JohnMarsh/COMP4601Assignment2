@@ -56,9 +56,6 @@ public class DocumentServiceImpl implements IDocumentService {
 		} else {
 			getDocumentsCollection().insert(document.toDBObject());
 		}
-		
-		
-		
 	}
 
 	@Override
