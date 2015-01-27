@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import edu.carleton.COMP4601.a1.dao.NameCollection;
+import edu.carleton.COMP4601.a1.dao.DocumentCollection;
 
 @Path("/sda/documents")
 public class SDAAllDocumentsResource extends AbstractSDAResource {
@@ -39,14 +39,12 @@ public class SDAAllDocumentsResource extends AbstractSDAResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public NameCollection documentXML(@Context HttpServletResponse servletResponse) throws IOException {
+	public DocumentCollection documentXML(@Context HttpServletResponse servletResponse) throws IOException {
 		try {
-			NameCollection c = new NameCollection();
-			c.setName(getService().getNamesOfAllDocuments());
-			return c;
+			return getService().getAllDocuments();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new NameCollection();
+			return new DocumentCollection();
 		}
 	}
 }

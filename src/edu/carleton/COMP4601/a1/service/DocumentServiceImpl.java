@@ -110,14 +110,24 @@ public class DocumentServiceImpl implements IDocumentService {
 	@Override
 	public List<String> getNamesOfAllDocuments() throws Exception {
 		List<String> l = new ArrayList<String>();
-		
+		List<Document> allDocuments = getAllDocuments().getDocuments();
+		for(Document d : allDocuments) {
+			l.add(d.getName());
+		}
+		return l;
+	}
+
+	@Override
+	public DocumentCollection getAllDocuments() throws Exception {
+		List<Document> docs = new ArrayList<Document>();
 		DBCursor find = getDocumentsCollection().find();
 		while(find.hasNext()) {
 			Document d = new Document(find.next().toMap());
-			l.add(d.getName());
+			docs.add(d);
 		}
-		
-		return l;
+		DocumentCollection col = new DocumentCollection();
+		col.setDocuments(docs);
+		return col;
 	}
 	
 	public int createNewDocumentId() {
