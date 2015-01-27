@@ -21,8 +21,7 @@ import edu.carleton.COMP4601.a1.dao.Document;
  *
  */
 @Path("/sda")
-public class SDARootResource extends AbstractSDAResource {
-	
+public class Main extends AbstractSDAResource {
 	
 	@GET
 	@Produces(MediaType.TEXT_HTML)

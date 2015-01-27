@@ -49,4 +49,7 @@ public interface IDocumentService {
 	public DocumentCollection getDocumentsWithTags(List<String> tags) throws Exception;
 
 	public List<String> getNamesOfAllDocuments() throws Exception;
+	
+	public DocumentCollection getAllDocuments() throws Exception;
+
 } 
