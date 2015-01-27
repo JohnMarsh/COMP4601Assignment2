@@ -18,18 +18,15 @@ public class SDADeleteResource extends AbstractSDAResource {
 	 * @param tags
 	 * @param servletResponse
 	 * @return
+	 * @throws Exception 
 	 */
 	@GET
 	@Path("{tags}")
 	public Response deleteByTags(@QueryParam("tags") String tags,
-			@Context HttpServletResponse servletResponse) {
+			@Context HttpServletResponse servletResponse) throws Exception {
 		
 		int numDeleted = 0;
-		try {
-			numDeleted = getService().deleteDocumentsWithTags(Arrays.asList(tags.split(":")));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		numDeleted = getService().deleteDocumentsWithTags(Arrays.asList(tags.split(":")));
 		
 		if(numDeleted == 0)
 			return Response.status(204).build();

@@ -25,19 +25,13 @@ public class SDASearchResource extends AbstractSDAResource {
 	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back XML
 	 * @param servletResponse
 	 * @return
-	 * @throws IOException
+	 * @throws Exception 
 	 */
 	@GET
 	@Path("/{tags}")
 	@Produces(MediaType.APPLICATION_XML)
-	public DocumentCollection searchDocumentsByTagsXML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws IOException {
-		try {
-			return getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
-		} catch (Exception e) {
-			e.printStackTrace();
-			servletResponse.sendError(204);
-			return null;
-		}
+	public DocumentCollection searchDocumentsByTagsXML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws Exception {
+		return getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
 	}
 	
 	/**

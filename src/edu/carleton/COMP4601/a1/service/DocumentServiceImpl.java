@@ -13,7 +13,6 @@ import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.a1.dao.Document;
 import edu.carleton.COMP4601.a1.dao.DocumentCollection;
-import edu.carleton.COMP4601.a1.exceptions.NoIdException;
 
 /**
  * MongoDB implementation of the document service that persists documents to MongoDB
