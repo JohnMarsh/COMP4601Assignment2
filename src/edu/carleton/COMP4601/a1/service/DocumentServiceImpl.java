@@ -46,7 +46,7 @@ public class DocumentServiceImpl implements IDocumentService {
 	@Override
 	public void saveDocument(Document document) throws Exception {
 		if(document.getId() == null)
-			throw new NoIdException();
+			document.setId(createNewDocumentId());
 		
 		Document existingDoc = getDocumentById(document.getId());
 		if(existingDoc != null) {
@@ -120,4 +120,20 @@ public class DocumentServiceImpl implements IDocumentService {
 		return l;
 	}
 	
+	public int createNewDocumentId() {
+		DBCursor limit = getDocumentsCollection().find().sort(new BasicDBObject(Document.COLUMN_ID, -1)).limit(1);
+		DBObject o = null;
+		if(limit.hasNext())
+			o = limit.next();
+		if(o == null)
+			return 1;
+		
+		Document d = new Document(o.toMap());
+		
+		return d.getId() + 1;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new DocumentServiceImpl().createNewDocumentId());
+	}
 }
