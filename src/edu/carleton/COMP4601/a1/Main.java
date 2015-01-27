@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.a1;
 
 import java.io.IOException;
 
@@ -14,6 +14,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import edu.carleton.COMP4601.a1.dao.Document;
+import edu.carleton.COMP4601.a1.resources.AbstractSDAResource;
 
 /**
  * The root resource for the REST api
