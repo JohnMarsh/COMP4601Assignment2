@@ -3,6 +3,7 @@ package edu.carleton.COMP4601.a1.resources;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -22,7 +23,7 @@ public class SDADeleteResource extends AbstractSDAResource {
 	 */
 	@GET
 	@Path("{tags}")
-	public Response deleteByTags(@QueryParam("tags") String tags,
+	public Response deleteByTags(@PathParam("tags") String tags,
 			@Context HttpServletResponse servletResponse) throws Exception {
 		
 		int numDeleted = 0;
