@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.assignment2.resources;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import edu.carleton.COMP4601.a1.dao.DocumentCollection;
+import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
 @Path("/sda/documents")
 public class SDAAllDocumentsResource extends AbstractSDAResource {

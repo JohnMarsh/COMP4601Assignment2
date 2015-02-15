@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.assignment2.resources;
 
 import java.io.IOException;
 
@@ -16,8 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import edu.carleton.COMP4601.a1.dao.Document;
-import edu.carleton.COMP4601.a1.exceptions.DocumentDoesNotExistException;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.exceptions.DocumentDoesNotExistException;
 
 
 /**

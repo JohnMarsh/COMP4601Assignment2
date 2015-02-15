@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.service;
+package edu.carleton.COMP4601.assignment2.service;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import edu.carleton.COMP4601.a1.dao.Document;
-import edu.carleton.COMP4601.a1.dao.DocumentCollection;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
 /**
  * MongoDB implementation of the document service that persists documents to MongoDB

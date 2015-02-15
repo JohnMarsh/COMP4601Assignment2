@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.dao;
+package edu.carleton.COMP4601.assignment2.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;

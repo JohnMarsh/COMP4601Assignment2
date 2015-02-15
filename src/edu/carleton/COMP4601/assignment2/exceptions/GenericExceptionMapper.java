@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.exceptions;
+package edu.carleton.COMP4601.assignment2.exceptions;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

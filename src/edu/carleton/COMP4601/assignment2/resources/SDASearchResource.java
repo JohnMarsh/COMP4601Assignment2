@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.assignment2.resources;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,8 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import edu.carleton.COMP4601.a1.dao.Document;
-import edu.carleton.COMP4601.a1.dao.DocumentCollection;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
 /**
  * API paths for searching for documents

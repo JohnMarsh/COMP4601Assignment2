@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.assignment2.resources;
 
 import java.util.Arrays;
 

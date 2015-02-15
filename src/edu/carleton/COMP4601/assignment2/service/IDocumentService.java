@@ -1,9 +1,9 @@
-package edu.carleton.COMP4601.a1.service;
+package edu.carleton.COMP4601.assignment2.service;
 
 import java.util.List;
 
-import edu.carleton.COMP4601.a1.dao.Document;
-import edu.carleton.COMP4601.a1.dao.DocumentCollection;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
 /**
  * The service that handles persistence of documents

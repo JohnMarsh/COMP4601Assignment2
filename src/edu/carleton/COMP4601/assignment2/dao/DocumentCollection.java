@@ -1,4 +1,4 @@
-package edu.carleton.COMP4601.a1.dao;
+package edu.carleton.COMP4601.assignment2.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.carleton.COMP4601.a1.dao.Document;
+import edu.carleton.COMP4601.assignment2.dao.Document;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

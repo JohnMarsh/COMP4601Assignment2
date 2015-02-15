@@ -1,8 +1,8 @@
-package edu.carleton.COMP4601.a1.resources;
+package edu.carleton.COMP4601.assignment2.resources;
 
-import edu.carleton.COMP4601.a1.dao.Document;
-import edu.carleton.COMP4601.a1.service.DocumentServiceImpl;
-import edu.carleton.COMP4601.a1.service.IDocumentService;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.service.DocumentServiceImpl;
+import edu.carleton.COMP4601.assignment2.service.IDocumentService;
 
 public class AbstractSDAResource {
 	private IDocumentService service;
