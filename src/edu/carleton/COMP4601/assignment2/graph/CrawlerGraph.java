@@ -57,7 +57,7 @@ public class CrawlerGraph implements Serializable {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		db = client.getDB("crawler");
+		db = client.getDB("COMP4601Assignment2");
 		graphCollection = db.getCollection("graphs");
 	}
 	
