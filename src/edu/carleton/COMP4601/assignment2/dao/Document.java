@@ -21,7 +21,7 @@ public class Document {
 	
 	
 	private Integer id;
-	private Integer score;
+	private Float score;
 	private String name;
 	private String text;
 	private ArrayList<String> tags;
@@ -42,7 +42,7 @@ public class Document {
 		if(map.getFirst("id") != null)
 			this.id = Integer.parseInt(map.getFirst("id"));
 		if(map.getFirst("score") != null)
-			this.score = Integer.parseInt(map.getFirst("score"));
+			this.score = Float.parseFloat(map.getFirst("score"));
 		this.name = map.getFirst("name");
 		this.text = map.getFirst("text");
 		if(map.getFirst("tags") != null) {
@@ -57,7 +57,7 @@ public class Document {
 	public Document(Map<?, ?> map) {
 		this();
 		this.id = (Integer) map.get(COLUMN_ID);
-		this.score = (Integer) map.get(COLUMN_SCORE);
+		this.score = (Float) map.get(COLUMN_SCORE);
 		this.name = (String) map.get(COLUMN_NAME);
 		this.text = (String) map.get(COLUMN_TEXT);
 		this.tags = (ArrayList<String>) map.get(COLUMN_TAGS);
@@ -68,11 +68,11 @@ public class Document {
 		return id;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(Float score) {
 		this.score = score;
 	}
 
-	public Integer getScore() {
+	public Float getScore() {
 		return score;
 	}
 

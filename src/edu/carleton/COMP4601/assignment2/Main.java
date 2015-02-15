@@ -27,7 +27,7 @@ public class Main extends AbstractSDAResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String index(@Context HttpServletResponse servletResponse) throws IOException {
-		return "COMP4601 Searchable Document Archive";
+		return "COMP4601 Searchable Document Archive V2: Devin Lynch and John Marsh";
 	}
 	
 	/**
