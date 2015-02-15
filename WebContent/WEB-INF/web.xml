@@ -18,4 +18,13 @@
     <servlet-name>COMP4601SDA</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+  <error-page>
+	<error-code>500</error-code>
+	<location>/general_error.html</location>
+  </error-page>
+  <listener>
+	<listener-class>
+	edu.carleton.COMP4601.utility.SDAContextClass
+	</listener-class>
+   </listener>
 </web-app>
