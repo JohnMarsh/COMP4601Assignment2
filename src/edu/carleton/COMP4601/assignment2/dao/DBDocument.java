@@ -19,6 +19,7 @@ public class DBDocument extends BasicDBObject {
 	private String mdTitle;
 	private String mdContentType;
 	private List<String> links;
+	private List<String> tags;
 	private byte[] binaryData;
 	
 	
@@ -76,6 +77,14 @@ public class DBDocument extends BasicDBObject {
 
 	public void setLinks(List<String> links) {
 		this.links = links;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
 	}
 	
 

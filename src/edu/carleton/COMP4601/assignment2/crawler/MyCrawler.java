@@ -80,6 +80,7 @@ public class MyCrawler extends WebCrawler {
 
 		doc.setId(page.getWebURL().getDocid());
 		doc.setCrawlTime(System.currentTimeMillis());
+		doc.setUrl(url);
 
 		String title = "";
 		String type = "";
