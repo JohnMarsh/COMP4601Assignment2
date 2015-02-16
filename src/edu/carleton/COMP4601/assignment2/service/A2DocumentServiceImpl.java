@@ -2,9 +2,15 @@ package edu.carleton.COMP4601.assignment2.service;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.graph.Multigraph;
+
+import Jama.Matrix;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -95,6 +101,23 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 			e.printStackTrace();
 		}
 		return g;
+	}
+
+	@Override
+	public void calculateAndSavePageRankScores() {
+		CrawlerGraph loadGraph = loadGraph();
+		List<CrawlerVertex> vset = new ArrayList(loadGraph.getGraph().vertexSet());
+		Iterator<CrawlerVertex> iterator = vset.iterator();
+		Matrix matrix = new Matrix(vset.size(), vset.size());
+		int i = 0;
+		while(iterator.hasNext()) {
+			CrawlerVertex vertex = iterator.next();
+			for(int z = 0; z < vset.size(); z++) {
+				int val = loadGraph.getGraph().containsEdge(vertex, vset.get(z)) ? 1 : 0;
+				matrix.set(i, z, val);
+			}
+			i++;
+		}
 	}
 
 }
