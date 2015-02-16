@@ -27,7 +27,7 @@ public class DBDocument extends BasicDBObject {
 	private List<String> links;
 	private List<String> tags;
 	private byte[] binaryData;
-	private Integer score;
+	private Double score;
 	
 	
 	public DBDocument(){
@@ -46,7 +46,7 @@ public class DBDocument extends BasicDBObject {
 		setLinks((List<String>) other.get(LINKS));
 		setTags((List<String>) other.get(TAGS));
 		setBinaryData((byte[]) other.get(BINARYDATA));
-		setScore(other.getInt(SCORE, 0));
+		setScore(other.getDouble(SCORE, 0));
 	}
 	
 	public Integer getId() {
@@ -117,11 +117,11 @@ public class DBDocument extends BasicDBObject {
 		put(TAGS, tags);
 	}
 
-	public Integer getScore() {
+	public Double getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(Double score) {
 		this.score = score;
 		put(SCORE, score);
 	}

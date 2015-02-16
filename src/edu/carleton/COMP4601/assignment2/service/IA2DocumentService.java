@@ -9,4 +9,5 @@ public interface IA2DocumentService {
 	public void deleteDBDocument(int docId);
 	public void saveGraph(CrawlerGraph graph);
 	public CrawlerGraph loadGraph();
+	public void calculateAndSavePageRankScores();
 }
