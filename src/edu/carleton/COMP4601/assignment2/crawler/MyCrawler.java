@@ -126,13 +126,15 @@ public class MyCrawler extends WebCrawler {
 
 				List<String> linkList = new ArrayList<String>();
 				for (Element link : links) {
-					linkList.add(link.attr("href"));
+					String href = link.attr("href");
+					linkList.add(href);
+					doc.getLinks().add(href);
 				}
 
 				String selector = "img[src~=(?i)\\.(png|jpe?g|gif|tiff?)]";
 				Elements images = jDoc.select(selector);
 				for (Element image : images) {
-
+					
 				}
 
 				CrawlerVertex currentPage = new CrawlerVertex(url);

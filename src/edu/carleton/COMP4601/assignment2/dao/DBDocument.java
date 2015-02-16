@@ -1,5 +1,8 @@
 package edu.carleton.COMP4601.assignment2.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.BasicDBObject;
 
 public class DBDocument extends BasicDBObject {
@@ -15,8 +18,14 @@ public class DBDocument extends BasicDBObject {
 	private String content;
 	private String mdTitle;
 	private String mdContentType;
+	private List<String> links;
 	private byte[] binaryData;
 	
+	
+	public DBDocument(){
+		super();
+		setLinks(new ArrayList<String>());
+	}
 	
 	public Integer getId() {
 		return id;
@@ -59,6 +68,14 @@ public class DBDocument extends BasicDBObject {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public List<String> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<String> links) {
+		this.links = links;
 	}
 	
 

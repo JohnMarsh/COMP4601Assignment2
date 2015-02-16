@@ -89,10 +89,10 @@ public class Indexer {
 	private void indexADocument(DBDocument dbDoc) throws IOException {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());
-		doc.add(new IntField("DocID", dbDoc.getId(), Field.Store.YES));
+		doc.add(new IntField("docID", dbDoc.getId(), Field.Store.YES));
 		doc.add(new LongField("Date", dbDoc.getCrawlTime(), Field.Store.YES));
 		doc.add(new TextField("URL", dbDoc.getUrl(), Field.Store.YES));
-		doc.add(new TextField("Content", dbDoc.getContent(), Field.Store.YES));
+		doc.add(new TextField("contents", dbDoc.getContent(), Field.Store.YES));
 		doc.add(new TextField("Content-Type", dbDoc.getMdContentType(), Field.Store.YES));
 		doc.add(new TextField("Title", dbDoc.getMdTitle(), Field.Store.YES));
 		writer.addDocument(doc);
