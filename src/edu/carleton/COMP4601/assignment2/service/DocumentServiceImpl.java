@@ -35,7 +35,7 @@ public class DocumentServiceImpl implements IDocumentService {
 	}
 	
 	private DB getDatabase() {
-		return getMongoClient().getDB("COMP4601Assignment1");
+		return getMongoClient().getDB("COMP4601Assignment2");
 	}
 	
 	private DBCollection getDocumentsCollection() {
