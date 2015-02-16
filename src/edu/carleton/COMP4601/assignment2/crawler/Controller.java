@@ -15,7 +15,7 @@ public class Controller {
          CrawlConfig config = new CrawlConfig();
          config.setCrawlStorageFolder(crawlStorageFolder);
          config.setMaxPagesToFetch(1000);
-         config.setPolitenessDelay(100);
+         config.setPolitenessDelay(1);
          config.setIncludeBinaryContentInCrawling(true);
 
          /*

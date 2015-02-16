@@ -2,6 +2,8 @@ package edu.carleton.COMP4601.assignment2.service;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.graph.Multigraph;
@@ -9,10 +11,12 @@ import org.jgrapht.graph.Multigraph;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
+import edu.carleton.COMP4601.assignment2.dao.Document;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
 import edu.carleton.COMP4601.utility.Marshaller;
@@ -95,6 +99,17 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 			e.printStackTrace();
 		}
 		return g;
+	}
+
+	@Override
+	public List<DBDocument> getAllDBDocuments() throws Exception {
+		List<DBDocument> docs = new ArrayList<DBDocument>();
+		DBCursor find = getDocumentsCollection().find();
+		while(find.hasNext()) {
+			DBDocument d = (DBDocument) find.next();
+			docs.add(d);
+		}
+		return docs;
 	}
 
 }
