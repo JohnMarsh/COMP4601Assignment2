@@ -1,19 +1,12 @@
 package edu.carleton.COMP4601.assignment2.graph;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.UnknownHostException;
 
-import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.Multigraph;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.assignment2.service.A2DocumentServiceImpl;
-import edu.carleton.COMP4601.utility.Marshaller;
 
 public class CrawlerGraph implements Serializable {
 
@@ -23,13 +16,13 @@ public class CrawlerGraph implements Serializable {
 	private static final long serialVersionUID = 2348692181046470369L;
 	
 	private String name;
-	private Multigraph<CrawlerVertex, DefaultEdge> graph;
+	private Multigraph<CrawlerVertex, CrawlerEdge> graph;
 	
-	public Multigraph<CrawlerVertex, DefaultEdge> getGraph() {
+	public Multigraph<CrawlerVertex, CrawlerEdge> getGraph() {
 		return graph;
 	}
 
-	public void setGraph(Multigraph<CrawlerVertex, DefaultEdge> graph) {
+	public void setGraph(Multigraph<CrawlerVertex, CrawlerEdge> graph) {
 		this.graph = graph;
 	}
 
@@ -44,7 +37,7 @@ public class CrawlerGraph implements Serializable {
 	
 	public CrawlerGraph(String name){
 		this.setName(name);
-		graph = new Multigraph<CrawlerVertex, DefaultEdge>(DefaultEdge.class);
+		graph = new Multigraph<CrawlerVertex, CrawlerEdge>(new CrawlerEdgeFactory());
 	}
 	
 	public void addEdge(CrawlerVertex source, CrawlerVertex dest){

@@ -93,7 +93,10 @@ public class PageRankCalculator {
 		while(iterator.hasNext()) {
 			CrawlerVertex vertex = iterator.next();
 			for(int z = 0; z < vertexList.size(); z++) {
-				int val = loadGraph.getGraph().containsEdge(vertex, vertexList.get(z)) ? 1 : 0;
+				CrawlerVertex other = vertexList.get(z);
+				int val = 0;
+				if(!other.equals(vertex))
+					val = loadGraph.getGraph().containsEdge(vertex, other) ? 1 : 0;
 				matrix.set(i, z, val);
 			}
 			i++;
@@ -112,28 +115,7 @@ public class PageRankCalculator {
 	
 	
 	public static void main(String[] args) {
-		CrawlerGraph g = new CrawlerGraph("foo");
-		g.addEdge(new CrawlerVertex("1"), new CrawlerVertex("2"));
-		g.addEdge(new CrawlerVertex("3"), new CrawlerVertex("2"));
-		g.addEdge(new CrawlerVertex("2"), new CrawlerVertex("1"));
-		g.addEdge(new CrawlerVertex("2"), new CrawlerVertex("3"));
-		
-		
-		Map<CrawlerVertex, Double> pageRankScores = getPageRankScores(g);
-		System.out.println(pageRankScores);
-		
-		/*Matrix createMatrixFromGraph = createConnectionMatrixFromGraph(g);
-		printMatric(createMatrixFromGraph);
-		
-		System.out.println();
-		
-		Matrix matrix = createProbabilityMatrix(createMatrixFromGraph, 0.5);
-		printMatric(matrix);
-		
-		System.out.println();
-		System.out.println("VECTOR:");
-		Matrix vector = createPageRankVectorsFromProbabilityMatrix(matrix);
-		printMatric(vector);*/
-		
+		A2DocumentServiceImpl serviceImpl = new A2DocumentServiceImpl();
+		serviceImpl.calculateAndSavePageRankScores();
 	}
 }
