@@ -18,6 +18,9 @@ public class A2PageRankUtil extends AbstractA2Resource {
 	public String pageRank() {
 		try {
 			List<DBDocument> docs = getService().getAllDBDocuments();
+			if(docs.isEmpty()){
+				return "<p>No Documents in DB</p>"; 
+			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("<table>");
 			for (DBDocument doc : docs) {

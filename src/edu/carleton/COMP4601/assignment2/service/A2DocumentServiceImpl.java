@@ -114,7 +114,8 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		List<DBDocument> docs = new ArrayList<DBDocument>();
 		DBCursor find = getDocumentsCollection().find();
 		while(find.hasNext()) {
-			DBDocument d = (DBDocument) find.next();
+		    BasicDBObject o = (BasicDBObject) find.next();
+			DBDocument d = new DBDocument(o);
 			docs.add(d);
 		}
 		return docs;
