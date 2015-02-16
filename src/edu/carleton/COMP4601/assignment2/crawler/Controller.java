@@ -9,7 +9,7 @@ import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 public class Controller {
 
 	public static void main(String[] args) throws Exception{
-		 int numberOfCrawlers = 2;
+		 int numberOfCrawlers = 10;
 		 String crawlStorageFolder = "/data/crawl/root";
 
          CrawlConfig config = new CrawlConfig();
@@ -32,7 +32,7 @@ public class Controller {
           * which are found in these pages
           */
          controller.addSeed("http://sikaman.dyndns.org:8888/courses/4601/resources/N-0.html");
-         controller.addSeed("http://www.carleton.ca");
+         //controller.addSeed("http://www.carleton.ca");
 
          /*
           * Start the crawl. This is a blocking operation, meaning that your code
