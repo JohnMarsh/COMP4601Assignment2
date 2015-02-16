@@ -3,20 +3,16 @@ package edu.carleton.COMP4601.assignment2.service;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.graph.Multigraph;
-
-import Jama.Matrix;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
@@ -114,6 +110,17 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	}
 
 	@Override
+	public List<DBDocument> getAllDBDocuments() throws Exception {
+		List<DBDocument> docs = new ArrayList<DBDocument>();
+		DBCursor find = getDocumentsCollection().find();
+		while(find.hasNext()) {
+		    BasicDBObject o = (BasicDBObject) find.next();
+			DBDocument d = new DBDocument(o);
+			docs.add(d);
+		}
+		return docs;
+	}
+	
 	public void calculateAndSavePageRankScores() {
 		CrawlerGraph loadGraph = loadGraph();
 		Map<CrawlerVertex, Double> pageRankScores = PageRankCalculator.getPageRankScores(loadGraph);

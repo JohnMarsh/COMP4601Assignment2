@@ -11,6 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.dao.Document;
 import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
@@ -145,4 +146,5 @@ public class DocumentServiceImpl implements IDocumentService {
 	public static void main(String[] args) {
 		System.out.println(new DocumentServiceImpl().createNewDocumentId());
 	}
+
 }
