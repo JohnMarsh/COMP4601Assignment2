@@ -46,7 +46,7 @@ public class DBDocument extends BasicDBObject {
 		setLinks((List<String>) other.get(LINKS));
 		setTags((List<String>) other.get(TAGS));
 		setBinaryData((byte[]) other.get(BINARYDATA));
-		setScore(other.getInt(SCORE));
+		setScore(other.getInt(SCORE, 0));
 	}
 	
 	public Integer getId() {
