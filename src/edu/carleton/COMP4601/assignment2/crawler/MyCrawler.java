@@ -30,6 +30,8 @@ import com.mongodb.MongoClient;
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
+import edu.carleton.COMP4601.assignment2.service.A2DocumentServiceImpl;
+import edu.carleton.COMP4601.assignment2.service.IA2DocumentService;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -41,20 +43,11 @@ public class MyCrawler extends WebCrawler {
 					+ "|wav|avi|mov|mpeg|ram|m4v"
 					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
-	private MongoClient client;
-	private DB db;
-	private DBCollection docCollection;
+	private IA2DocumentService service;
 
 	@Override
 	public void onStart() {
-		try {
-			client = new MongoClient("localhost");
-		} catch (UnknownHostException e) {
-			this.myController.shutdown();
-			e.printStackTrace();
-		}
-		db = client.getDB("COMP4601Assignment2");
-		docCollection = db.getCollection("crawlerDocuments");
+		this.service = new A2DocumentServiceImpl();
 	}
 
 	/**
@@ -64,6 +57,9 @@ public class MyCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
+		if(!href.contains("carleton.ca") && ! href.contains("sikaman.dyndns.org") && ! href.contains("zdirect.com")) {
+			return false;
+		}
 		return !FILTERS.matcher(href).matches();
 	}
 
@@ -149,7 +145,18 @@ public class MyCrawler extends WebCrawler {
 				e.printStackTrace();
 			}
 		}
+		try{
+			getService().saveDocument(doc);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-		docCollection.insert(doc);
+	public IA2DocumentService getService() {
+		return service;
+	}
+
+	public void setService(IA2DocumentService service) {
+		this.service = service;
 	}
 }
