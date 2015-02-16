@@ -12,4 +12,5 @@ public interface IA2DocumentService {
 	public void saveGraph(CrawlerGraph graph);
 	public CrawlerGraph loadGraph();
 	public List<DBDocument> getAllDBDocuments() throws Exception;
+	public void calculateAndSavePageRankScores();
 }
