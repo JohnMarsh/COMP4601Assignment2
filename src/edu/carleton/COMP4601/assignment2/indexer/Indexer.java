@@ -43,7 +43,6 @@ public class Indexer {
 		try {
 			dir = FSDirectory.open(new File(INDEX_DIR));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Analyzer analyzer = new StandardAnalyzer();
@@ -52,13 +51,20 @@ public class Indexer {
 		try {
 			writer = new IndexWriter(dir, iwc);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setService(new A2DocumentServiceImpl());
 	}
 
 	public void indexDocuments() {
+		indexDocuments(false);
+	}
+
+	public void indexDocumentsWithBoost() {
+		indexDocuments(true);
+	}
+	
+	private void indexDocuments(boolean boost) {
 		List<DBDocument> allDBDocuments = null;
 		try {
 			allDBDocuments = getService().getAllDBDocuments();
@@ -67,7 +73,11 @@ public class Indexer {
 		}
 		for(DBDocument doc : allDBDocuments){
 			try {
-				indexADocument(doc);
+				if(boost) {
+					indexADocumentWithBoost(doc);
+				} else {
+					indexADocument(doc);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -75,24 +85,6 @@ public class Indexer {
 		try {
 			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void indexDocumentsWithBoost() {
-		DBCursor cursor = docCollection.find();
-		while(cursor.hasNext()){
-			try {
-				indexADocumentWithBoost((DBDocument)cursor.next());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		try {
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -101,12 +93,12 @@ public class Indexer {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());
 		//.setBoost(dbDoc.getScore().floatValue())
-		IntField docId = new IntField("docID", dbDoc.getId(), Field.Store.YES);
-		LongField date = new LongField("Date", dbDoc.getCrawlTime(), Field.Store.YES);
-		TextField url = new TextField("URL", dbDoc.getUrl(), Field.Store.YES);
-		TextField contents = new TextField("contents", dbDoc.getContent(), Field.Store.YES);
-		TextField type = new TextField("Content-Type", dbDoc.getMdContentType(), Field.Store.YES);
-		TextField title = new TextField("Title", dbDoc.getMdTitle(), Field.Store.YES);
+		IntField docId = new IntField(COLUMN_DOCID, dbDoc.getId(), Field.Store.YES);
+		LongField date = new LongField(COLUMN_DATE, dbDoc.getCrawlTime(), Field.Store.YES);
+		TextField url = new TextField(COLUMN_URL, dbDoc.getUrl(), Field.Store.YES);
+		TextField contents = new TextField(COLUMN_CONTENT, dbDoc.getContent(), Field.Store.YES);
+		TextField type = new TextField(COLUMN_CONTENTTYPE, dbDoc.getMdContentType(), Field.Store.YES);
+		TextField title = new TextField(COLUMN_TITLE, dbDoc.getMdTitle(), Field.Store.YES);
 		
 		float score = dbDoc.getScore().floatValue();
 		
