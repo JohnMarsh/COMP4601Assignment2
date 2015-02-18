@@ -139,7 +139,11 @@ public class MyCrawler extends WebCrawler {
 					CrawlerVertex linkVertex = new CrawlerVertex(link);
 					CrawlerGraph.getInstance().addEdge(currentPage, linkVertex);
 				}
-
+				String text = "";
+				for(Element e : jDoc.select("p, h1, h2, h3, h4")) {
+					text += e.text();
+				}
+				doc.setContent(text);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

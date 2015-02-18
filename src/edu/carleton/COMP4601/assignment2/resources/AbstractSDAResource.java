@@ -25,6 +25,7 @@ public class AbstractSDAResource {
 				+"<b>Name:</b> "+document.getName()+"<br>"
 				+"<b>Links:</b> "+document.getLinks()+"<br>"
 				+"<b>Tags:</b> "+document.getTags()+"<br>"
+				+"<b>Score:</b> "+document.getScore()+"<br>"
 				+"--------------------------<br>";
 	}
 }

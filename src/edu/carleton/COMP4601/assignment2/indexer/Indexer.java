@@ -2,7 +2,7 @@ package edu.carleton.COMP4601.assignment2.indexer;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -15,25 +15,23 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
+import edu.carleton.COMP4601.assignment2.service.A2DocumentServiceImpl;
+import edu.carleton.COMP4601.assignment2.service.IA2DocumentService;
 
 import org.apache.lucene.document.Field;
 
 public class Indexer {
-	
+	private IA2DocumentService service;
 	private IndexWriter writer;
-	private MongoClient client;
-	private DB db;
-	private DBCollection docCollection;
-	
-
 	public static final String INDEX_DIR = "/data/index";
+	public static final String COLUMN_DOCID = "DocID";
+	public static final String COLUMN_DATE = "Date";
+	public static final String COLUMN_URL = "URL";
+	public static final String COLUMN_CONTENT = "Content";
+	public static final String COLUMN_CONTENTTYPE = "Content-Type";
+	public static final String COLUMN_TITLE = "Title";
+	public static final String SCORE = "Title";
 	
 	public static void main(String args[]){
 		Indexer indexer = new Indexer();
@@ -57,31 +55,26 @@ public class Indexer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		try {
-			client = new MongoClient("localhost");
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		db = client.getDB("COMP4601Assignment2");
-		docCollection = db.getCollection("crawlerDocuments");
-		
+		setService(new A2DocumentServiceImpl());
 	}
 
 	public void indexDocuments() {
-		DBCursor cursor = docCollection.find();
-		while(cursor.hasNext()){
+		List<DBDocument> allDBDocuments = null;
+		try {
+			allDBDocuments = getService().getAllDBDocuments();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		for(DBDocument doc : allDBDocuments){
 			try {
-				indexADocument((DBDocument)cursor.next());
+				indexADocument(doc);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		try {
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -89,12 +82,22 @@ public class Indexer {
 	private void indexADocument(DBDocument dbDoc) throws IOException {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());
-		doc.add(new IntField("docID", dbDoc.getId(), Field.Store.YES));
-		doc.add(new LongField("Date", dbDoc.getCrawlTime(), Field.Store.YES));
-		doc.add(new TextField("URL", dbDoc.getUrl(), Field.Store.YES));
-		doc.add(new TextField("contents", dbDoc.getContent(), Field.Store.YES));
-		doc.add(new TextField("Content-Type", dbDoc.getMdContentType(), Field.Store.YES));
-		doc.add(new TextField("Title", dbDoc.getMdTitle(), Field.Store.YES));
+		doc.add(new IntField(COLUMN_DOCID, dbDoc.getId(), Field.Store.YES));
+		doc.add(new LongField(COLUMN_DATE, dbDoc.getCrawlTime(), Field.Store.YES));
+		doc.add(new TextField(COLUMN_URL, dbDoc.getUrl(), Field.Store.YES));
+		doc.add(new TextField(COLUMN_CONTENT, dbDoc.getContent(), Field.Store.YES));
+		doc.add(new TextField(COLUMN_CONTENTTYPE, dbDoc.getMdContentType(), Field.Store.YES));
+		doc.add(new TextField(COLUMN_TITLE, dbDoc.getMdTitle(), Field.Store.YES));
+		
+		
 		writer.addDocument(doc);
+	}
+
+	public IA2DocumentService getService() {
+		return service;
+	}
+
+	public void setService(IA2DocumentService service) {
+		this.service = service;
 	}
 }
