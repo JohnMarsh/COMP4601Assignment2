@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.dao.Document;
 import edu.carleton.COMP4601.assignment2.exceptions.DocumentDoesNotExistException;
 
@@ -26,7 +27,7 @@ import edu.carleton.COMP4601.assignment2.exceptions.DocumentDoesNotExistExceptio
  *
  */
 @Path("/sda/{id}")
-public class SDADocumentResource extends AbstractSDAResource {
+public class SDADocumentResource extends AbstractA2Resource {
 	@PathParam("id")
 	String id;
 	
@@ -40,10 +41,10 @@ public class SDADocumentResource extends AbstractSDAResource {
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Document getDocument(@Context HttpServletResponse servletResponse) throws Exception {
-		Document d = getService().getDocumentById(Integer.parseInt(id));
+		DBDocument d = getService().getDocumentById(Integer.parseInt(id));
 		if(d == null)
 			throw new DocumentDoesNotExistException();
-		return d;
+		return new Document(d);
 	}
 	
 	/**
@@ -56,12 +57,12 @@ public class SDADocumentResource extends AbstractSDAResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getDocumentHtml(@Context HttpServletResponse servletResponse) throws Exception {
-		Document document = getService().getDocumentById(Integer.parseInt(id));
+		DBDocument document = getService().getDocumentById(Integer.parseInt(id));
 		if(document == null)
 			throw new DocumentDoesNotExistException();
 		return "<html>"
 				+"<body>"
-				+getHtmlForSingleDocument(document)
+				+getHtmlForSingleDocument(new Document(document))
 				+"<body>"
 				+"</html>";
 	}
@@ -102,7 +103,7 @@ public class SDADocumentResource extends AbstractSDAResource {
 			MultivaluedMap<String, String> multivaluedMap) throws Exception {
 		Document doc = new Document(multivaluedMap);
 		doc.setId(Integer.parseInt(id));
-		getService().saveDocument(doc);
+		getService().saveDocument(new DBDocument(doc));
 		return Response.status(200).build();
 	}
 	
@@ -118,7 +119,7 @@ public class SDADocumentResource extends AbstractSDAResource {
 	@DELETE
 	@Produces(MediaType.APPLICATION_XML)
 	public Response saveNewDocument(@Context HttpServletResponse servletResponse) throws NumberFormatException, Exception {
-		getService().deleteDocument(Integer.parseInt(id));
+		getService().deleteDBDocument(Integer.parseInt(id));
 		return Response.status(200).build();
 	}
 }

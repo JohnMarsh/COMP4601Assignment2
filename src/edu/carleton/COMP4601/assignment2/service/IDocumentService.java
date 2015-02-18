@@ -10,6 +10,7 @@ import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
  * @author devinlynch
  *
  */
+@Deprecated
 public interface IDocumentService {
 	
 	/**

@@ -20,7 +20,7 @@ import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
  *
  */
 @Path("/sda/search")
-public class SDASearchResource extends AbstractSDAResource {
+public class SDASearchResource extends AbstractA2Resource {
 	/**
 	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back XML
 	 * @param servletResponse

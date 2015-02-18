@@ -3,7 +3,7 @@ package edu.carleton.COMP4601.assignment2.resources;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-@Path("/sda/boost")
+@Path("/sda/noboost")
 public class A2NoBoost extends AbstractA2Resource {
 
 	@GET

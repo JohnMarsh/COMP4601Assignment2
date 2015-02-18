@@ -73,11 +73,7 @@ public class Indexer {
 		}
 		for(DBDocument doc : allDBDocuments){
 			try {
-				if(boost) {
-					indexADocumentWithBoost(doc);
-				} else {
-					indexADocument(doc);
-				}
+				indexADocument(doc, boost);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -89,10 +85,9 @@ public class Indexer {
 		}
 	}
 	
-	private void indexADocumentWithBoost(DBDocument dbDoc) throws IOException {
+	public void indexADocument(DBDocument dbDoc, boolean boost) throws IOException {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());
-		//.setBoost(dbDoc.getScore().floatValue())
 		IntField docId = new IntField(COLUMN_DOCID, dbDoc.getId(), Field.Store.YES);
 		LongField date = new LongField(COLUMN_DATE, dbDoc.getCrawlTime(), Field.Store.YES);
 		TextField url = new TextField(COLUMN_URL, dbDoc.getUrl(), Field.Store.YES);
@@ -100,14 +95,15 @@ public class Indexer {
 		TextField type = new TextField(COLUMN_CONTENTTYPE, dbDoc.getMdContentType(), Field.Store.YES);
 		TextField title = new TextField(COLUMN_TITLE, dbDoc.getMdTitle(), Field.Store.YES);
 		
-		float score = dbDoc.getScore().floatValue();
-		
-		docId.setBoost(score);
-		date.setBoost(score);
-		url.setBoost(score);
-		contents.setBoost(score);
-		type.setBoost(score);
-		title.setBoost(score);
+		if( boost ) {
+			float score = dbDoc.getScore().floatValue();
+			docId.setBoost(score);
+			date.setBoost(score);
+			url.setBoost(score);
+			contents.setBoost(score);
+			type.setBoost(score);
+			title.setBoost(score);
+		}
 		
 		doc.add(docId);
 		doc.add(date);
@@ -115,20 +111,6 @@ public class Indexer {
 		doc.add(contents);
 		doc.add(type);
 		doc.add(title);
-		writer.addDocument(doc);
-	}
-
-	private void indexADocument(DBDocument dbDoc) throws IOException {
-		Document doc = new Document();
-		System.out.println("Indexing document with url: "+dbDoc.getUrl());
-		doc.add(new IntField(COLUMN_DOCID, dbDoc.getId(), Field.Store.YES));
-		doc.add(new LongField(COLUMN_DATE, dbDoc.getCrawlTime(), Field.Store.YES));
-		doc.add(new TextField(COLUMN_URL, dbDoc.getUrl(), Field.Store.YES));
-		doc.add(new TextField(COLUMN_CONTENT, dbDoc.getContent(), Field.Store.YES));
-		doc.add(new TextField(COLUMN_CONTENTTYPE, dbDoc.getMdContentType(), Field.Store.YES));
-		doc.add(new TextField(COLUMN_TITLE, dbDoc.getMdTitle(), Field.Store.YES));
-		
-		
 		writer.addDocument(doc);
 	}
 

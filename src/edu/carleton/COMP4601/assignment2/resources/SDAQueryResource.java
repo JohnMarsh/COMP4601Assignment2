@@ -16,7 +16,7 @@ import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 import edu.carleton.COMP4601.assignment2.searcher.Searcher;
 
 @Path("/sda/query")
-public class SDAQueryResource extends AbstractSDAResource {
+public class SDAQueryResource extends AbstractA2Resource {
 	private Searcher searcher;
 	
 	public SDAQueryResource() {

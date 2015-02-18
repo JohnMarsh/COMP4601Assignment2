@@ -9,7 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("/sda/delete")
-public class SDADeleteResource extends AbstractSDAResource {
+public class SDADeleteResource extends AbstractA2Resource {
 	
 	/**
 	 * Given tags in the format "tag1:tag2:tag3...", any documents found with any of the
