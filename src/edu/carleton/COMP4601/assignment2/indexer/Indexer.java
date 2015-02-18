@@ -79,6 +79,53 @@ public class Indexer {
 		}
 	}
 
+	public void indexDocumentsWithBoost() {
+		DBCursor cursor = docCollection.find();
+		while(cursor.hasNext()){
+			try {
+				indexADocumentWithBoost((DBDocument)cursor.next());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void indexADocumentWithBoost(DBDocument dbDoc) throws IOException {
+		Document doc = new Document();
+		System.out.println("Indexing document with url: "+dbDoc.getUrl());
+		//.setBoost(dbDoc.getScore().floatValue())
+		IntField docId = new IntField("docID", dbDoc.getId(), Field.Store.YES);
+		LongField date = new LongField("Date", dbDoc.getCrawlTime(), Field.Store.YES);
+		TextField url = new TextField("URL", dbDoc.getUrl(), Field.Store.YES);
+		TextField contents = new TextField("contents", dbDoc.getContent(), Field.Store.YES);
+		TextField type = new TextField("Content-Type", dbDoc.getMdContentType(), Field.Store.YES);
+		TextField title = new TextField("Title", dbDoc.getMdTitle(), Field.Store.YES);
+		
+		float score = dbDoc.getScore().floatValue();
+		
+		docId.setBoost(score);
+		date.setBoost(score);
+		url.setBoost(score);
+		contents.setBoost(score);
+		type.setBoost(score);
+		title.setBoost(score);
+		
+		doc.add(docId);
+		doc.add(date);
+		doc.add(url);
+		doc.add(contents);
+		doc.add(type);
+		doc.add(title);
+		writer.addDocument(doc);
+	}
+
 	private void indexADocument(DBDocument dbDoc) throws IOException {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());

@@ -20,12 +20,14 @@ import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerEdge;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
+import edu.carleton.COMP4601.assignment2.indexer.Indexer;
 import edu.carleton.COMP4601.utility.Marshaller;
 
 public class A2DocumentServiceImpl implements IA2DocumentService {
-	private static MongoClient  _mongoClient;
+	private static MongoClient _mongoClient;
+
 	protected synchronized static MongoClient getMongoClient() {
-		if(_mongoClient == null) {
+		if (_mongoClient == null) {
 			try {
 				_mongoClient = new MongoClient("localhost");
 			} catch (UnknownHostException e) {
@@ -34,23 +36,24 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		}
 		return _mongoClient;
 	}
-	
+
 	private DB getDatabase() {
 		return getMongoClient().getDB("COMP4601Assignment2");
 	}
-	
+
 	private DBCollection getDocumentsCollection() {
 		return getDatabase().getCollection("crawlerDocuments");
 	}
+
 	private DBCollection getGraphCollection() {
 		return getDatabase().getCollection("graphs");
 	}
-	
+
 	@Override
 	public void saveDocument(DBDocument dbDoc) {
 		DBDocument existingDoc = getDBDocument(dbDoc.getUrl());
-		if(existingDoc != null) {
-			if(dbDoc.getId() != null) {
+		if (existingDoc != null) {
+			if (dbDoc.getId() != null) {
 				BasicDBObject q = new BasicDBObject();
 				q.put(DBDocument.ID, new Integer(dbDoc.getId()));
 				getDocumentsCollection().update(q, dbDoc);
@@ -67,7 +70,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		BasicDBObject o = new BasicDBObject();
 		o.put(DBDocument.URL, url);
 		DBObject findOne = getDocumentsCollection().findOne(o);
-		if(findOne == null)
+		if (findOne == null)
 			return null;
 		return new DBDocument((BasicDBObject) findOne);
 
@@ -84,7 +87,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	public void saveGraph(CrawlerGraph graph) {
 		BasicDBObject o = new BasicDBObject();
 		getGraphCollection().remove(o);
-		
+
 		BasicDBObject object = new BasicDBObject("name", graph.getName());
 		try {
 			object.append("data", Marshaller.serializeObject(graph.getGraph()));
@@ -98,11 +101,12 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	@Override
 	public CrawlerGraph loadGraph() {
 		BasicDBObject findOne = (BasicDBObject) getGraphCollection().findOne();
-		if(findOne == null)
+		if (findOne == null)
 			return null;
 		CrawlerGraph g = new CrawlerGraph(findOne.getString("name"));
 		try {
-			g.setGraph((Multigraph<CrawlerVertex, CrawlerEdge>) Marshaller.deserializeObject((byte[]) findOne.get("data")));
+			g.setGraph((Multigraph<CrawlerVertex, CrawlerEdge>) Marshaller
+					.deserializeObject((byte[]) findOne.get("data")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -113,27 +117,40 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	public List<DBDocument> getAllDBDocuments() throws Exception {
 		List<DBDocument> docs = new ArrayList<DBDocument>();
 		DBCursor find = getDocumentsCollection().find();
-		while(find.hasNext()) {
-		    BasicDBObject o = (BasicDBObject) find.next();
+		while (find.hasNext()) {
+			BasicDBObject o = (BasicDBObject) find.next();
 			DBDocument d = new DBDocument(o);
 			docs.add(d);
 		}
 		return docs;
 	}
-	
+
 	public void calculateAndSavePageRankScores() {
 		CrawlerGraph loadGraph = loadGraph();
-		Map<CrawlerVertex, Double> pageRankScores = PageRankCalculator.getPageRankScores(loadGraph);
-		for(Entry<CrawlerVertex, Double> entry : pageRankScores.entrySet()) {
+		Map<CrawlerVertex, Double> pageRankScores = PageRankCalculator
+				.getPageRankScores(loadGraph);
+		for (Entry<CrawlerVertex, Double> entry : pageRankScores.entrySet()) {
 			String url = entry.getKey().getUrl();
-			if(url == null)
+			if (url == null)
 				continue;
 			DBDocument dbDocument = getDBDocument(url);
-			if(dbDocument == null)
+			if (dbDocument == null)
 				continue;
 			dbDocument.setScore(entry.getValue());
 			saveDocument(dbDocument);
 		}
+	}
+
+	@Override
+	public void reIndexWithBoost() {
+		Indexer i = new Indexer();
+		i.indexDocumentsWithBoost();
+	}
+
+	@Override
+	public void reIndexNoBoost() {
+		Indexer i = new Indexer();
+		i.indexDocuments();
 	}
 
 }
