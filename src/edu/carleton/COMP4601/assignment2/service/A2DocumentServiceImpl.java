@@ -17,6 +17,8 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
+import edu.carleton.COMP4601.assignment2.dao.Document;
+import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerEdge;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
@@ -151,6 +153,70 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	public void reIndexNoBoost() {
 		Indexer i = new Indexer();
 		i.indexDocuments();
+	}
+
+	@Override
+	public DBDocument getDocumentById(int id) throws Exception {
+		BasicDBObject o = new BasicDBObject();
+		o.put(DBDocument.ID, new Integer(id));
+		DBObject findOne = getDocumentsCollection().findOne(o);
+		if(findOne == null)
+			return null;
+		return new DBDocument((BasicDBObject) findOne);
+	}
+
+	@Override
+	public int deleteDocumentsWithTags(List<String> tags) throws Exception {
+		List<Document> documentsWithTags = getDocumentsWithTags(tags).getDocuments();
+		
+		for(Document d : documentsWithTags) {
+			deleteDBDocument(d.getId());
+		}
+		
+		return documentsWithTags.size();
+	}
+
+	@Override
+	public DocumentCollection getDocumentsWithTags(List<String> tags)
+			throws Exception {
+		DBObject o = new BasicDBObject("$in", tags);
+		
+		DBObject fields = new BasicDBObject();
+		fields.put("$elemMatch", o);
+		
+		DBObject query = new BasicDBObject(DBDocument.TAGS, fields);
+		DBCursor find = getDocumentsCollection().find(query);
+		
+		List<Document> docs = new ArrayList<Document>();
+		while(find.hasNext()) {
+			DBObject next = find.next();
+			docs.add(new Document(new DBDocument((BasicDBObject) next)));
+		}
+		
+		DocumentCollection coll = new DocumentCollection();
+		coll.setDocuments(docs);
+		return coll;
+	}
+
+	@Override
+	public List<String> getNamesOfAllDocuments() throws Exception {
+		List<String> l = new ArrayList<String>();
+		List<Document> allDocuments = getAllDocuments().getDocuments();
+		for(Document d : allDocuments) {
+			l.add(d.getName());
+		}
+		return l;
+	}
+
+	@Override
+	public DocumentCollection getAllDocuments() throws Exception {
+		DocumentCollection c = new DocumentCollection();
+		List<DBDocument> allDBDocuments = getAllDBDocuments();
+		for(DBDocument d : allDBDocuments) {
+			c.getDocuments().add(new Document(d));
+		}
+		
+		return c;
 	}
 
 }

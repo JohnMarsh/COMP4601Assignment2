@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 
 @Path("/sda/documents")
-public class SDAAllDocumentsResource extends AbstractSDAResource {
+public class SDAAllDocumentsResource extends AbstractA2Resource {
 	
 	@GET
 	@Produces(MediaType.TEXT_HTML)

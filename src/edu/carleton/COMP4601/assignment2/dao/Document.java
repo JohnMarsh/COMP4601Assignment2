@@ -63,6 +63,19 @@ public class Document {
 		this.tags = (ArrayList<String>) map.get(COLUMN_TAGS);
 		this.links = (ArrayList<String>) map.get(COLUMN_LINKS);
 	}
+
+	public Document(DBDocument dbDoc) {
+		this();
+		this.id = dbDoc.getId();
+		if(dbDoc.getScore() != null)
+			this.score = dbDoc.getScore().floatValue();
+		this.name = dbDoc.getMdTitle();
+		this.text = dbDoc.getContent();
+		if(dbDoc.getTags() != null)
+			this.tags = new ArrayList<>(dbDoc.getTags());
+		if(dbDoc.getLinks() != null)
+			this.links =  new ArrayList<>(dbDoc.getLinks());
+	}
 	
 	public Integer getId() {
 		return id;

@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.dao.Document;
-import edu.carleton.COMP4601.assignment2.resources.AbstractSDAResource;
+import edu.carleton.COMP4601.assignment2.resources.AbstractA2Resource;
 import edu.carleton.COMP4601.assignment2.service.A2DocumentServiceImpl;
 import edu.carleton.COMP4601.utility.DBUtil;
 
@@ -27,7 +27,7 @@ import edu.carleton.COMP4601.utility.DBUtil;
  *
  */
 @Path("/sda")
-public class Main extends AbstractSDAResource {
+public class Main extends AbstractA2Resource {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -52,7 +52,7 @@ public class Main extends AbstractSDAResource {
 			@Context HttpServletResponse servletResponse) {
 		Document doc = new Document(multivaluedMap);
 		try {
-			getService().saveDocument(doc);
+			getService().saveDocument(new DBDocument(doc));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(204).build();

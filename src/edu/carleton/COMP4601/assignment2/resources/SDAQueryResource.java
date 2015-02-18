@@ -1,7 +1,7 @@
 package edu.carleton.COMP4601.assignment2.resources;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -13,25 +13,23 @@ import javax.ws.rs.core.MediaType;
 
 import edu.carleton.COMP4601.assignment2.dao.Document;
 import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
+import edu.carleton.COMP4601.assignment2.searcher.Searcher;
 
-/**
- * API paths for searching for documents
- * @author devinlynch
- *
- */
-@Path("/sda/search")
-public class SDASearchResource extends AbstractA2Resource {
-	/**
-	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back XML
-	 * @param servletResponse
-	 * @return
-	 * @throws Exception 
-	 */
-	@GET
+@Path("/sda/query")
+public class SDAQueryResource extends AbstractA2Resource {
+	private Searcher searcher;
+	
+	public SDAQueryResource() {
+		super();
+		this.searcher = new Searcher();
+	}
+	
 	@Path("/{tags}")
 	@Produces(MediaType.APPLICATION_XML)
 	public DocumentCollection searchDocumentsByTagsXML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws Exception {
-		return getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
+		DocumentCollection collection = new DocumentCollection();
+		collection.setDocuments(searcher.query(tags));
+		return collection;
 	}
 	
 	/**
@@ -45,26 +43,17 @@ public class SDASearchResource extends AbstractA2Resource {
 	@Produces(MediaType.TEXT_HTML)
 	public String searchDocumentsByTagsHTML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws IOException {
 		String noDocsResponse = "No documents found.";
-		DocumentCollection collection;
-		try {
-			collection = getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
-		} catch (Exception e) {
-			e.printStackTrace();
-			servletResponse.sendError(204);
-			return noDocsResponse;
-		}
-		
-		if(collection.getDocuments().isEmpty())
+		ArrayList<Document> docs = searcher.query(tags);
+		if(docs.isEmpty())
 			return noDocsResponse;
 		
 		String html = "<html><body>";
 		
-		for(Document doc : collection.getDocuments()) {
+		for(Document doc : docs) {
 			html += getHtmlForSingleDocument(doc);
 		}
 		
 		html += "</body></html>";
 		return html;
 	}
-	
 }

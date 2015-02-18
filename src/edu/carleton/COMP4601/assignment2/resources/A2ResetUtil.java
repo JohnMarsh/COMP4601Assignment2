@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import edu.carleton.COMP4601.utility.DBUtil;
 
 @Path("/sda/reset")
-public class A2ResetUtil extends AbstractSDAResource {
+public class A2ResetUtil extends AbstractA2Resource {
 	
 	@GET
 	@Produces(MediaType.TEXT_HTML)

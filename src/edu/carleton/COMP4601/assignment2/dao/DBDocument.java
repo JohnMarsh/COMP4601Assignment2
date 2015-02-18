@@ -48,6 +48,19 @@ public class DBDocument extends BasicDBObject {
 		setBinaryData((byte[]) other.get(BINARYDATA));
 		setScore(other.getDouble(SCORE, 0));
 	}
+
+	public DBDocument(Document document) {
+		this();
+		setId(document.getId());
+		if(document.getScore() != null)
+			setScore(document.getScore().doubleValue());
+		setMdTitle(document.getName());
+		setContent(document.getText());
+		if(document.getTags() != null)
+			setTags(new ArrayList<>(document.getTags()));
+		if(document.getLinks() != null)
+			setLinks(new ArrayList<>(document.getLinks()));
+	}
 	
 	public Integer getId() {
 		return id;
