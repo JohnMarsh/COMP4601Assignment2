@@ -55,7 +55,14 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	
 	@Override
 	public void saveDocument(DBDocument dbDoc) {
-		DBDocument existingDoc = getDBDocument(dbDoc.getUrl());
+		DBDocument existingDoc = null;
+		try {
+			if(dbDoc.getId() != null){
+				existingDoc = getDocumentById(dbDoc.getId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (existingDoc != null) {
 			if (dbDoc.getId() != null) {
 				BasicDBObject q = new BasicDBObject();
