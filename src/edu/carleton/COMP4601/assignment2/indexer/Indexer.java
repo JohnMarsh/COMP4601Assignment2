@@ -119,7 +119,7 @@ public class Indexer {
 			tagString = dbDoc.getTags().toString();
 		}
 		
-		TextField tags = new TextField(COLUMN_TITLE, tagString, Field.Store.YES);
+		TextField tags = new TextField(COLUMN_TAGS, tagString, Field.Store.YES);
 		tags.setBoost(2.0f);
 		
 		if( boost ) {
