@@ -1,7 +1,7 @@
 package edu.carleton.COMP4601.assignment2.resources;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 
 import edu.carleton.COMP4601.assignment2.dao.Document;
 import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
+import edu.carleton.COMP4601.utility.SearchResult;
+import edu.carleton.COMP4601.utility.SearchServiceManager;
 
 /**
  * API paths for searching for documents
@@ -21,45 +23,39 @@ import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
  */
 @Path("/sda/search")
 public class SDASearchResource extends AbstractA2Resource {
-	/**
-	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back XML
-	 * @param servletResponse
-	 * @return
-	 * @throws Exception 
-	 */
+	private SearchServiceManager manager;
+	
+	public SDASearchResource() {
+		manager = SearchServiceManager.getInstance();
+	}
+	
+	
 	@GET
 	@Path("/{tags}")
 	@Produces(MediaType.APPLICATION_XML)
 	public DocumentCollection searchDocumentsByTagsXML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws Exception {
-		return getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
+		SearchResult search = manager.query(tags);
+		search.await(10, TimeUnit.SECONDS);
+		DocumentCollection col = new DocumentCollection();
+		col.getDocuments().addAll(search.getDocs());
+		return col;
 	}
 	
-	/**
-	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back HTML
-	 * @param servletResponse
-	 * @return
-	 * @throws IOException
-	 */
 	@GET
 	@Path("/{tags}")
 	@Produces(MediaType.TEXT_HTML)
-	public String searchDocumentsByTagsHTML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws IOException {
+	public String searchDocumentsByTagsHTML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws IOException, InterruptedException {
 		String noDocsResponse = "No documents found.";
-		DocumentCollection collection;
-		try {
-			collection = getService().getDocumentsWithTags(Arrays.asList(tags.split(":")));
-		} catch (Exception e) {
-			e.printStackTrace();
-			servletResponse.sendError(204);
-			return noDocsResponse;
-		}
-		
-		if(collection.getDocuments().isEmpty())
+		SearchResult search = manager.query(tags);
+		search.await(10, TimeUnit.SECONDS);
+		DocumentCollection col = new DocumentCollection();
+		col.getDocuments().addAll(search.getDocs());
+		if(col.getDocuments().isEmpty())
 			return noDocsResponse;
 		
 		String html = "<html><body>";
 		
-		for(Document doc : collection.getDocuments()) {
+		for(Document doc : col.getDocuments()) {
 			html += getHtmlForSingleDocument(doc);
 		}
 		

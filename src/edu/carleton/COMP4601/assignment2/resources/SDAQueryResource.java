@@ -24,6 +24,7 @@ public class SDAQueryResource extends AbstractA2Resource {
 		this.searcher = new Searcher();
 	}
 	
+	@GET
 	@Path("/{tags}")
 	@Produces(MediaType.APPLICATION_XML)
 	public DocumentCollection searchDocumentsByTagsXML(@PathParam("tags") String tags, @Context HttpServletResponse servletResponse) throws Exception {
@@ -32,12 +33,6 @@ public class SDAQueryResource extends AbstractA2Resource {
 		return collection;
 	}
 	
-	/**
-	 * Searches for documents containing any of the given tags in the URL in the format tag1:tag2:tag3 etc. and returns back HTML
-	 * @param servletResponse
-	 * @return
-	 * @throws IOException
-	 */
 	@GET
 	@Path("/{tags}")
 	@Produces(MediaType.TEXT_HTML)
