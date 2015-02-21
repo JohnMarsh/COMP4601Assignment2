@@ -15,6 +15,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.sleepycat.je.tree.DIN;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.dao.Document;
@@ -23,6 +24,7 @@ import edu.carleton.COMP4601.assignment2.graph.CrawlerEdge;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
 import edu.carleton.COMP4601.assignment2.indexer.Indexer;
+import edu.carleton.COMP4601.assignment2.searcher.Searcher;
 import edu.carleton.COMP4601.utility.Marshaller;
 
 public class A2DocumentServiceImpl implements IA2DocumentService {
@@ -50,7 +52,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	private DBCollection getGraphCollection() {
 		return getDatabase().getCollection("graphs");
 	}
-
+	
 	@Override
 	public void saveDocument(DBDocument dbDoc) {
 		DBDocument existingDoc = getDBDocument(dbDoc.getUrl());
@@ -59,11 +61,18 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 				BasicDBObject q = new BasicDBObject();
 				q.put(DBDocument.ID, new Integer(dbDoc.getId()));
 				getDocumentsCollection().update(q, dbDoc);
+				Indexer indexer = new Indexer();
+				indexer.deleteAIndexedDocument(dbDoc.getId());
+				indexer = new Indexer();
+				indexer.indexASingleDocument(dbDoc);
 				return;
 			} else {
 				deleteDBDocument(existingDoc.getId());
 			}
+			
 		}
+		Indexer indexer = new Indexer();
+		indexer.indexASingleDocument(dbDoc);
 		getDocumentsCollection().insert(dbDoc);
 	}
 
@@ -80,6 +89,9 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 
 	@Override
 	public void deleteDBDocument(int docId) {
+		Indexer indexer = new Indexer();
+		indexer.deleteAIndexedDocument(docId);
+
 		BasicDBObject o = new BasicDBObject();
 		o.put(DBDocument.ID, new Integer(docId));
 		getDocumentsCollection().remove(o);

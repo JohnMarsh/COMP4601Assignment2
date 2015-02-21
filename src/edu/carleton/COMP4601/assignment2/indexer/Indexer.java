@@ -12,6 +12,10 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -85,7 +89,21 @@ public class Indexer {
 		}
 	}
 	
-	public void indexADocument(DBDocument dbDoc, boolean boost) throws IOException {
+	public void indexASingleDocument(DBDocument doc) {
+		try {
+			indexADocument(doc, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void indexADocument(DBDocument dbDoc, boolean boost) throws IOException {
 		Document doc = new Document();
 		System.out.println("Indexing document with url: "+dbDoc.getUrl());
 		IntField docId = new IntField(COLUMN_DOCID, dbDoc.getId(), Field.Store.YES);
@@ -112,6 +130,22 @@ public class Indexer {
 		doc.add(type);
 		doc.add(title);
 		writer.addDocument(doc);
+	}
+	
+	public void deleteAIndexedDocument(int id) {
+		Query idQuery = null;
+		idQuery = NumericRangeQuery.newIntRange(Indexer.COLUMN_DOCID, id, id, true, true);
+		try {
+			writer.deleteDocuments(idQuery);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public IA2DocumentService getService() {

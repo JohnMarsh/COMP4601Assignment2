@@ -125,5 +125,4 @@ public class Searcher {
 		}
 		return docs;
 	}
-
 }

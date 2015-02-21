@@ -39,7 +39,7 @@ public class DBDocument extends BasicDBObject {
 	public DBDocument(BasicDBObject other) {
 		setId(other.getInt(ID));
 		setUrl(other.getString(URL));
-		setCrawlTime(other.getLong(CRAWLTIME));
+		setCrawlTime(other.getLong(CRAWLTIME, 0));
 		setContent(other.getString(CONTENT));
 		setMdTitle(other.getString(MDTITLE));
 		setMdContentType(other.getString(MDCONTENTTYPE));
@@ -70,6 +70,8 @@ public class DBDocument extends BasicDBObject {
 		put(ID, id);
 	}
 	public String getUrl() {
+		if(url == null)
+			return "";
 		return url;
 	}
 	public void setUrl(String url) {
@@ -77,6 +79,8 @@ public class DBDocument extends BasicDBObject {
 		put(URL, url);
 	}
 	public Long getCrawlTime() {
+		if(crawlTime == null)
+			return (long) 1;
 		return crawlTime;
 	}
 	public void setCrawlTime(Long crawlTime) {
@@ -84,6 +88,8 @@ public class DBDocument extends BasicDBObject {
 		put(CRAWLTIME, crawlTime);
 	}
 	public String getMdTitle() {
+		if(mdTitle == null)
+			return "";
 		return mdTitle;
 	}
 	public void setMdTitle(String mdTitle) {
@@ -91,6 +97,8 @@ public class DBDocument extends BasicDBObject {
 		put(MDTITLE, mdTitle);
 	}
 	public String getMdContentType() {
+		if(mdContentType == null)
+			return "";
 		return mdContentType;
 	}
 	public void setMdContentType(String mdContentType) {
@@ -105,6 +113,8 @@ public class DBDocument extends BasicDBObject {
 		put(BINARYDATA, binaryData);
 	}
 	public String getContent() {
+		if(content == null)
+			return "";
 		return content;
 	}
 	public void setContent(String content) {
