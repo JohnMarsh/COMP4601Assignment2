@@ -95,7 +95,9 @@ public class SearchServiceManager {
 			String url = null;
 			try {
 				url = e.getValue().getString(SDAConstants.URL);
+				System.out.println("Foudn url: "+url);
 			} catch (JSONException ex) {
+				ex.printStackTrace();
 			}
 			if (url != null)
 				new AsyncSearch(sr, url, tags, serviceType).start();
@@ -130,10 +132,14 @@ public class SearchServiceManager {
 				WebResource service;
 				Client client = Client.create(new DefaultClientConfig());
 				logger.log(Level.INFO, "Searching: " + url);
+				System.out.println( "Searching: " + url);
+				url=url.replace("/rest/sda", "");
 				if (url.endsWith("/"))
 					service = client.resource(url);
 				else
 					service = client.resource(url + "/");
+				
+				
 
 				ClientResponse r = service.path(SDAConstants.REST)
 						.path(SDAConstants.SDA).path(serviceType).path(tags)
