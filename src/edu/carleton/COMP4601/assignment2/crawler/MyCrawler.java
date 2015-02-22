@@ -6,7 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.tika.exception.TikaException;
@@ -44,10 +46,13 @@ public class MyCrawler extends WebCrawler {
 					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
 	private IA2DocumentService service;
+	
+	private Map<String,String> imageAltText;
 
 	@Override
 	public void onStart() {
 		this.service = new A2DocumentServiceImpl();
+		imageAltText = new HashMap<String, String>();
 	}
 
 	/**
@@ -98,6 +103,11 @@ public class MyCrawler extends WebCrawler {
 			doc.setMdTitle(title);
 			doc.setMdContentType(type);
 			doc.setContent(handler.toString());
+			
+			if(imageAltText.containsKey(url)){
+				doc.setContent(imageAltText.get(url));
+			}
+			
 			doc.setBinaryData(IOUtils.toByteArray(input));
 
 			input.close();
@@ -131,7 +141,9 @@ public class MyCrawler extends WebCrawler {
 				String selector = "img[src~=(?i)\\.(png|jpe?g|gif|tiff?)]";
 				Elements images = jDoc.select(selector);
 				for (Element image : images) {
-					
+					String alt = image.attr("alt");
+					String src = image.attr("src");
+					imageAltText.put(src, alt);
 				}
 
 				CrawlerVertex currentPage = new CrawlerVertex(url);
