@@ -35,7 +35,8 @@ public class Indexer {
 	public static final String COLUMN_CONTENT = "Content";
 	public static final String COLUMN_CONTENTTYPE = "Content-Type";
 	public static final String COLUMN_TITLE = "Title";
-	public static final String SCORE = "Title";
+	public static final String COLUMN_TAGS = "Tags";
+	public static final String SCORE = "Score";
 	
 	public static void main(String args[]){
 		Indexer indexer = new Indexer();
@@ -113,6 +114,14 @@ public class Indexer {
 		TextField type = new TextField(COLUMN_CONTENTTYPE, dbDoc.getMdContentType(), Field.Store.YES);
 		TextField title = new TextField(COLUMN_TITLE, dbDoc.getMdTitle(), Field.Store.YES);
 		
+		String tagString = "";	
+		if(dbDoc.getTags() != null){
+			tagString = dbDoc.getTags().toString();
+		}
+		
+		TextField tags = new TextField(COLUMN_TAGS, tagString, Field.Store.YES);
+		tags.setBoost(2.0f);
+		
 		if( boost ) {
 			float score = dbDoc.getScore().floatValue();
 			docId.setBoost(score);
@@ -121,6 +130,7 @@ public class Indexer {
 			contents.setBoost(score);
 			type.setBoost(score);
 			title.setBoost(score);
+			tags.setBoost(score);
 		}
 		
 		doc.add(docId);
@@ -129,6 +139,7 @@ public class Indexer {
 		doc.add(contents);
 		doc.add(type);
 		doc.add(title);
+		doc.add(tags);
 		writer.addDocument(doc);
 	}
 	
