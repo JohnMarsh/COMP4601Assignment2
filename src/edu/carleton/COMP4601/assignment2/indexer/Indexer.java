@@ -36,7 +36,7 @@ public class Indexer {
 	public static final String COLUMN_CONTENTTYPE = "Content-Type";
 	public static final String COLUMN_TITLE = "Title";
 	public static final String COLUMN_TAGS = "Tags";
-	public static final String SCORE = "Title";
+	public static final String SCORE = "Score";
 	
 	public static void main(String args[]){
 		Indexer indexer = new Indexer();
