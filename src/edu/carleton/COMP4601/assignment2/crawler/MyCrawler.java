@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.tika.exception.TikaException;
@@ -26,10 +23,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
-
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
@@ -50,7 +43,7 @@ public class MyCrawler extends WebCrawler {
 	private IA2DocumentService service;
 	
 	private Map<String,String> imageAltText;
-	
+
 	@Override
 	public void onStart() {
 		this.service = new A2DocumentServiceImpl();
