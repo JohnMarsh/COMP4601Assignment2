@@ -54,7 +54,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 	}
 	
 	@Override
-	public void saveDocument(DBDocument dbDoc) {
+	public void saveDocumentAndIndex(DBDocument dbDoc) {
 		DBDocument existingDoc = null;
 		try {
 			if(dbDoc.getId() != null){
@@ -82,6 +82,30 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		indexer.indexASingleDocument(dbDoc);
 		getDocumentsCollection().insert(dbDoc);
 	}
+	
+	@Override
+	public void saveDocument(DBDocument dbDoc) {
+		DBDocument existingDoc = null;
+		try {
+			if(dbDoc.getId() != null){
+				existingDoc = getDocumentById(dbDoc.getId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (existingDoc != null) {
+			if (dbDoc.getId() != null) {
+				BasicDBObject q = new BasicDBObject();
+				q.put(DBDocument.ID, new Integer(dbDoc.getId()));
+				getDocumentsCollection().update(q, dbDoc);
+				return;
+			} else {
+				deleteDBDocument(existingDoc.getId());
+			}
+			
+		}
+		getDocumentsCollection().insert(dbDoc);
+	}
 
 	@Override
 	public DBDocument getDBDocument(String url) {
@@ -104,7 +128,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		getDocumentsCollection().remove(o);
 	}
 
-	@Override
+	/*@Override
 	public void saveGraph(CrawlerGraph graph) {
 		BasicDBObject o = new BasicDBObject();
 		getGraphCollection().remove(o);
@@ -117,6 +141,17 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		}
 		getGraphCollection().insert(object);
 	}
+	*/
+	
+	@Override
+	public void saveGraph(CrawlerGraph graph) {
+		BasicDBObject o = new BasicDBObject();
+		getGraphCollection().remove(o);
+
+		BasicDBObject object = new BasicDBObject("name", graph.getName());
+		object.append("data", graph.edgeSetToList());
+		getGraphCollection().insert(object);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -125,12 +160,7 @@ public class A2DocumentServiceImpl implements IA2DocumentService {
 		if (findOne == null)
 			return null;
 		CrawlerGraph g = new CrawlerGraph(findOne.getString("name"));
-		try {
-			g.setGraph((Multigraph<CrawlerVertex, CrawlerEdge>) Marshaller
-					.deserializeObject((byte[]) findOne.get("data")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		g.setGraphFromEdgeMap((List<Map<String, String>>) findOne.get("data"));
 		return g;
 	}
 

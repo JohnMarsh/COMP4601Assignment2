@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +23,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
-
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 
 import edu.carleton.COMP4601.assignment2.dao.DBDocument;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
@@ -62,12 +57,16 @@ public class MyCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		if(!href.contains("carleton.ca") && ! href.contains("sikaman.dyndns.org") && ! href.contains("zdirect.com")) {
+		return isURLOK(href);
+	}
+	
+	private boolean isURLOK(String href) {
+		if(!href.contains("http://www.carleton.ca") && ! href.contains("http://sikaman.dyndns.org") && ! href.contains("http://www.zdirect.com")) {
 			return false;
 		}
 		return !FILTERS.matcher(href).matches();
 	}
-
+	
 	/**
 	 * This function is called when a page is fetched and ready to be processed
 	 * by your program.
@@ -138,6 +137,7 @@ public class MyCrawler extends WebCrawler {
 					doc.getLinks().add(href);
 				}
 
+				CrawlerVertex currentPage = new CrawlerVertex(url);
 				String selector = "img[src~=(?i)\\.(png|jpe?g|gif|tiff?)]";
 				Elements images = jDoc.select(selector);
 				for (Element image : images) {
@@ -146,10 +146,16 @@ public class MyCrawler extends WebCrawler {
 					imageAltText.put(src, alt);
 				}
 
-				CrawlerVertex currentPage = new CrawlerVertex(url);
 				for (String link : linkList) {
+					if(! isURLOK(link))
+						continue;
 					CrawlerVertex linkVertex = new CrawlerVertex(link);
 					CrawlerGraph.getInstance().addEdge(currentPage, linkVertex);
+					
+					DBDocument persistedLink = getService().getDBDocument(link);
+					if(persistedLink != null) {
+						doc.getLinks().add("/sda/"+persistedLink.getId());
+					}
 				}
 				String text = "";
 				for(Element e : jDoc.select("p, h1, h2, h3, h4")) {

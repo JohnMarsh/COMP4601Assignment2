@@ -15,7 +15,7 @@ public class Controller {
          CrawlConfig config = new CrawlConfig();
          config.setCrawlStorageFolder(crawlStorageFolder);
 
-         config.setMaxPagesToFetch(100);
+         config.setMaxPagesToFetch(2000);
          config.setPolitenessDelay(1);
 
          config.setIncludeBinaryContentInCrawling(true);
@@ -35,6 +35,8 @@ public class Controller {
           */
          controller.addSeed("http://sikaman.dyndns.org:8888/courses/4601/resources/N-0.html");
          controller.addSeed("http://www.carleton.ca");
+         controller.addSeed("http://www.zdirect.com");
+
 
          /*
           * Start the crawl. This is a blocking operation, meaning that your code
