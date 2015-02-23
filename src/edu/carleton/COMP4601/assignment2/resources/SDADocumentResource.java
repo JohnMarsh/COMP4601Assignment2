@@ -103,7 +103,7 @@ public class SDADocumentResource extends AbstractA2Resource {
 			MultivaluedMap<String, String> multivaluedMap) throws Exception {
 		Document doc = new Document(multivaluedMap);
 		doc.setId(Integer.parseInt(id));
-		getService().saveDocument(new DBDocument(doc));
+		getService().saveDocumentAndIndex(new DBDocument(doc));
 		return Response.status(200).build();
 	}
 	

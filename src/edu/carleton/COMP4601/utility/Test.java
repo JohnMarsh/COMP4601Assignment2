@@ -1,5 +1,6 @@
 package edu.carleton.COMP4601.utility;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import javax.ws.rs.core.MediaType;
@@ -11,34 +12,18 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import edu.carleton.COMP4601.assignment2.dao.DocumentCollection;
 import edu.carleton.COMP4601.assignment2.graph.CrawlerGraph;
+import edu.carleton.COMP4601.assignment2.graph.CrawlerVertex;
 import edu.carleton.COMP4601.assignment2.service.A2DocumentServiceImpl;
 
 public class Test {
 
 	public static void main(String[] args) {
-		SearchResult sr = new SearchResult(100);
-		String url = "http://192.168.0.12:8080/COMP4601SDA/";
-		WebResource service;
-		Client client = Client.create(new DefaultClientConfig());
-		if (url.endsWith("/"))
-			service = client.resource(url);
-		else
-			service = client.resource(url + "/");
-
-		ClientResponse r = service.path(SDAConstants.REST)
-				.path(SDAConstants.SDA).path("/query/bob")
-				.type(MediaType.APPLICATION_XML)
-				.accept(MediaType.APPLICATION_XML)
-				.get(ClientResponse.class);
-		// Check to make sure that we got a reasonable response
-		if (r.getStatus() < 204) {
-			sr.addAll(r.getEntity(DocumentCollection.class)
-					.getDocuments());
-		} else {
-			System.out.println(r.getStatus());
-		}
+		A2DocumentServiceImpl im = new A2DocumentServiceImpl();
+		CrawlerGraph loadGraph = im.loadGraph();
 		
-		System.out.println(sr.getDocs().size());
+		ArrayList<CrawlerVertex> arrayList = new ArrayList<>(loadGraph.getGraph().vertexSet());
+		System.out.println(arrayList.size());
+		//System.out.println(loadGraph.getGraph().containsEdge(arrayList.get(0), arrayList.get(1)));
 	}
 
 }

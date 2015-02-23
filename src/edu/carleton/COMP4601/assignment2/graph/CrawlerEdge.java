@@ -40,6 +40,8 @@ public class CrawlerEdge implements Serializable {
 			return false;
 		}
 		CrawlerEdge other = (CrawlerEdge) o;
+		if(other.getSource() == null || other.getTarget() == null)
+			return false;
 		
 		return (other.getSource().equals(target) && other.getTarget().equals(source))
 				|| (other.getSource().equals(source) && other.getTarget().equals(target));

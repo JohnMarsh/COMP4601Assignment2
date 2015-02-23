@@ -52,7 +52,7 @@ public class Main extends AbstractA2Resource {
 			@Context HttpServletResponse servletResponse) {
 		Document doc = new Document(multivaluedMap);
 		try {
-			getService().saveDocument(new DBDocument(doc));
+			getService().saveDocumentAndIndex(new DBDocument(doc));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(204).build();

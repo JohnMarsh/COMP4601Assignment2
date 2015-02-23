@@ -33,6 +33,7 @@ public class DBDocument extends BasicDBObject {
 	public DBDocument(){
 		super();
 		setLinks(new ArrayList<String>());
+		setTags(new ArrayList<String>());
 	}
 	
 	@SuppressWarnings("unchecked")
